@@ -1,0 +1,43 @@
+{
+  "update_url": "https://clients2.google.com/service/update2/crx",
+
+  "name": "ultimate dictionary",
+  "version": "2.3",
+  "manifest_version": 2,
+  "description": "auto english dictionary",
+
+  "browser_action": {
+    "default_icon": "16x16.png",
+    "icons": ["128x128.png"]
+  },
+
+  "icons": {
+    "16": "16x16.png",
+    "48": "48x48.png",
+    "128": "128x128.png"
+  },
+
+  "background": {
+    "page": "background.html"
+  },
+
+  "content_scripts": [{
+    "matches": ["<all_urls>"],
+    "all_frames": true,
+    "css": ["bubble.css", "result-min.css"],
+    "js": ["jquery-1.7.2.min.js",
+      "meteor-ddp.js", "SelectedTextnotification.js"
+    ]
+  }],
+
+  "permissions": [
+    "http://www.gujaratilexicon.com/*",
+    "https://www.gujaratilexicon.com/*",
+    "https://www.google.com/*",
+    "storage",
+    "unlimitedStorage"
+  ],
+
+  "web_accessible_resources": ["glxCloseButton.png"],
+  "content_security_policy": "script-src 'self' https://www.google.com/jsapi https://www.google.com/uds/?file=search&v=1; object-src 'self'"
+}
