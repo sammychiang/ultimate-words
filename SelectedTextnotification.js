@@ -3,70 +3,61 @@ var selectedWord, curDictOpt, mousePosX, mousePosY; // todo: selectedWord life p
 var isShanbay = window.location.hostname == "www.shanbay.com";
 
 function init() {
-	//Intiliaze Event Handler
 	if (document) {
 		document.onkeydown = handelKeyPress;
+		console.log("**");
 		document.body.addEventListener('mouseup', selectedWordNotification,
 			false);
-		document.body.addEventListener('click', removeDictBubble,
-			false);
-		//document.body.onclick = removeDictBubble;
+		document.body.addEventListener('click', function() {
+			removeDictBubble();
+		}, false);
 
 		setInterval(function() {
-			// body...
-			if ($("grammarly-card")) {
+			if ($("grammarly-card").length) {
 				$("grammarly-card").remove();
 			}
 		}, 500);
+
 		if (isShanbay) {
-			// var shanbayWord;
 			setInterval(function() {
-				// console.log($(".span10.offset1>h1")[0].innerHTML);  直接得到背诵的单词，不需要选中
-				// if (window.getSelection().toString().trim() === "") {
-				// 	removeDictBubble();
-				// 	return false;
-				// } else {
-				// 	if ($('#dict').length !== 0 || inSearching ||
-				// 		$('.popover').length !== 0) {
-				if ($('.popover'))
+				if ($('.popover').length) {
 					$('.popover').remove();
-				// 		return false;
-				// 	}
-				// 	selectedWord = window.getSelection().toString().trim();
-				// 	renderBubble(10, screen.availHeight * 0.6,
-				// 		selectedWord);
-				// }
+				}
 			}, 300);
 		}
 	}
 }
 
-
 function selectedWordNotification(event) {
-	console.log(event.type);
-	if (window.getSelection().toString().trim() === "")
+	console.log("2", new Date());
+	if (window.getSelection().toString().trim() === "") {
+		console.log("3");
 		return;
+	}
+	console.log("10");
 	var length = window.getSelection().toString().trim().split(' ').length;
+	console.log("4");
 	if (length > 0 && length < 6) {
 		selectedWord = window.getSelection().toString().trim();
+		console.log("5");
 	} else {
+		console.log("6");
 		return false;
 	}
 	if ($('#dict').length === 0) {
+		console.log("7");
 		mousePosX = event.pageX;
 		mousePosY = event.pageY;
 		renderBubble(mousePosX, mousePosY,
 			selectedWord);
 		if (length > 2) {
+			console.log("8");
 			renderYoudao(mousePosX, mousePosY,
 				selectedWord);
 		}
 	}
 }
 
-function saveToLocalstorage() {
-
-}
 
 function handelKeyPress(event) {
 	if (event.keyCode == 27) { //ESC
@@ -130,7 +121,7 @@ function renderImages(mouseX, mouseY, word) {
 	}, function(response) {
 		var wordDiv = document.createElement('div');
 		wordDiv.id = "images";
-		wordDiv.className = "images";
+		wordDiv.className = "ultimateWords images";
 		wordDiv.style.maxHeight = "350px";
 		wordDiv.style.width = "600px";
 		wordDiv.style.overflow = "auto";
@@ -165,29 +156,24 @@ function renderImages(mouseX, mouseY, word) {
 	});
 }
 
-function setChromeStorage(word) { //todo: design database(english words hash )?
-	var counts;
-	chrome.storage.local.get(word, function(items) {
-		counts = items[word] ? parseInt(items[word]) : 0;
-		var object = {};
-		object[word] = counts + 1;
-		chrome.storage.local.set(object, function() {});
-		chrome.storage.local.get(null, function(items) {
-			console.log("words number:", Object.keys(items).length, "words:", items);
-		});
-	});
-
-}
-
 function removeDictBubble(className) {
+	console.log("1", new Date(), className);
+	if (className === undefined) {
+		if ($(".ultimateWords").length) {
+			console.log("1");
+			$(".ultimateWords").remove();
+		}
+		return;
+	}
 	var divClassName = "." + className;
 	if ($(divClassName).length) {
-		console.log($(divClassName).length, "merriam remove");
+		console.log("2");
 		$(divClassName).remove();
 	}
 }
 
 function renderYoudao(mouseX, mouseY, word) {
+	console.log("10");
 	inSearching = true;
 	chrome.runtime.sendMessage({
 		selectedWord: word,
@@ -195,7 +181,7 @@ function renderYoudao(mouseX, mouseY, word) {
 	}, function(response) {
 		var wordDiv = document.createElement('div');
 		wordDiv.id = "youdao";
-		wordDiv.className = "collins";
+		wordDiv.className = "ultimateWords collins";
 		wordDiv.style.maxHeight = "250px";
 		wordDiv.style.overflow = "auto";
 		wordDiv.style.position = "absolute";
@@ -219,8 +205,8 @@ function renderYoudao(mouseX, mouseY, word) {
 			el.innerHTML = html;
 			return $(el);
 		};
+
 		var allDocument = notWorking(response.result);
-		console.log("allDocument", allDocument);
 		//add youdao website link
 		var link = document.createElement('a');
 		var realWord = allDocument.find("#collinsResult span.title")[0].textContent;
@@ -240,7 +226,8 @@ function renderYoudao(mouseX, mouseY, word) {
 }
 
 function renderBubble(mouseX, mouseY, word) {
-	removeDictBubble();
+	console.log("9");
+	removeDictBubble("merriam");
 	//className in merriam-webster:词性, "main-fl"; 词义："ld_on_collegiate"
 	inSearching = true;
 	chrome.runtime.sendMessage({
@@ -249,7 +236,7 @@ function renderBubble(mouseX, mouseY, word) {
 	}, function(response) {
 		var wordDiv = document.createElement('div');
 		wordDiv.id = "merriam";
-		wordDiv.className = "merriam";
+		wordDiv.className = "ultimateWords merriam";
 		wordDiv.style.maxHeight = "250px";
 		wordDiv.style.overflow = "auto";
 		wordDiv.style.position = "absolute";
@@ -262,7 +249,7 @@ function renderBubble(mouseX, mouseY, word) {
 		if (response.result == "error") {
 			wordDiv.innerHTML = "No this word in Merriam-Webster";
 			setTimeout(function() {
-				removeDictBubble();
+				removeDictBubble('merriam');
 			}, 2000);
 		} else {
 			var notWorking = function(html) {
@@ -274,8 +261,7 @@ function renderBubble(mouseX, mouseY, word) {
 			var allDocument = notWorking(response.result);
 			var realWord = allDocument.find('.headword>h1')[0].lastChild.textContent;
 			var wordState = allDocument.find('.main-fl');
-			setChromeStorage(realWord);
-
+			upload_word(realWord);
 			//get word state list to judge weather there is noun
 			var wordStateListEm = allDocument.find(".main-fl em"); //list of em elements
 			var wordStateList = [];

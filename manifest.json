@@ -2,9 +2,9 @@
   "update_url": "https://clients2.google.com/service/update2/crx",
 
   "name": "ultimate dictionary",
-  "version": "2.3",
+  "version": "0.1.1",
   "manifest_version": 2,
-  "description": "auto english dictionary",
+  "description": "Auto english dictionary",
 
   "browser_action": {
     "default_icon": "16x16.png",
@@ -25,19 +25,19 @@
     "matches": ["<all_urls>"],
     "all_frames": true,
     "css": ["bubble.css", "result-min.css"],
-    "js": ["jquery-1.7.2.min.js",
-      "meteor-ddp.js", "SelectedTextnotification.js"
+    "js": ["js/extension/lib/jquery-2.1.4.min.js",
+      "js/meteor/meteor-ddp.js",
+      "js/meteor/upload_words.js",
+      "SelectedTextnotification.js"
     ]
   }],
 
   "permissions": [
-    "http://www.gujaratilexicon.com/*",
-    "https://www.gujaratilexicon.com/*",
     "https://www.google.com/*",
     "storage",
     "unlimitedStorage"
   ],
 
   "web_accessible_resources": ["glxCloseButton.png"],
-  "content_security_policy": "script-src 'self' https://www.google.com/jsapi https://www.google.com/uds/?file=search&v=1; object-src 'self'"
+  "content_security_policy": "script-src 'self' https://www.google.com/jsapi https://www.google.com/uds/?file=search&v=1 https://ajax.googleapis.com; object-src 'self'"
 }

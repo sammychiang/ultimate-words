@@ -41,8 +41,6 @@ MeteorDdp.prototype.connect = function() {
   self.sock.onmessage = function(msg) {
     var data = JSON.parse(msg.data);
 
-    console.log(msg);
-
     switch (data.msg) {
       case 'connected':
         conn.resolve(data);
@@ -92,6 +90,7 @@ MeteorDdp.prototype._resolveCall = function(data) {
   if (data.error) {
     this.defs[data.id].reject(data.error.reason);
   } else if (typeof data.result !== 'undefined') {
+    console.log(data, this.defs[data.id]);
     this.defs[data.id].resolve(data.result);
   }
 };
