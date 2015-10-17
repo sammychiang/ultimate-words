@@ -24,10 +24,7 @@
   "content_scripts": [{
     "matches": ["<all_urls>"],
     "all_frames": true,
-    "css": ["bubble.css", "result-min.css"],
     "js": ["js/extension/lib/jquery-2.1.4.min.js",
-      "js/meteor/meteor-ddp.js",
-      "js/meteor/upload_words.js",
       "SelectedTextnotification.js"
     ]
   }],

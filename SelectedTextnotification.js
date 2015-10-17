@@ -5,7 +5,6 @@ var isShanbay = window.location.hostname == "www.shanbay.com";
 function init() {
 	if (document) {
 		document.onkeydown = handelKeyPress;
-		console.log("**");
 		document.body.addEventListener('mouseup', selectedWordNotification,
 			false);
 		document.body.addEventListener('click', function() {
@@ -29,29 +28,21 @@ function init() {
 }
 
 function selectedWordNotification(event) {
-	console.log("2", new Date());
 	if (window.getSelection().toString().trim() === "") {
-		console.log("3");
 		return;
 	}
-	console.log("10");
 	var length = window.getSelection().toString().trim().split(' ').length;
-	console.log("4");
 	if (length > 0 && length < 6) {
 		selectedWord = window.getSelection().toString().trim();
-		console.log("5");
 	} else {
-		console.log("6");
 		return false;
 	}
 	if ($('#dict').length === 0) {
-		console.log("7");
 		mousePosX = event.pageX;
 		mousePosY = event.pageY;
 		renderBubble(mousePosX, mousePosY,
 			selectedWord);
 		if (length > 2) {
-			console.log("8");
 			renderYoudao(mousePosX, mousePosY,
 				selectedWord);
 		}
@@ -157,23 +148,19 @@ function renderImages(mouseX, mouseY, word) {
 }
 
 function removeDictBubble(className) {
-	console.log("1", new Date(), className);
 	if (className === undefined) {
 		if ($(".ultimateWords").length) {
-			console.log("1");
 			$(".ultimateWords").remove();
 		}
 		return;
 	}
 	var divClassName = "." + className;
 	if ($(divClassName).length) {
-		console.log("2");
 		$(divClassName).remove();
 	}
 }
 
 function renderYoudao(mouseX, mouseY, word) {
-	console.log("10");
 	inSearching = true;
 	chrome.runtime.sendMessage({
 		selectedWord: word,
@@ -226,7 +213,6 @@ function renderYoudao(mouseX, mouseY, word) {
 }
 
 function renderBubble(mouseX, mouseY, word) {
-	console.log("9");
 	removeDictBubble("merriam");
 	//className in merriam-webster:词性, "main-fl"; 词义："ld_on_collegiate"
 	inSearching = true;
@@ -261,7 +247,6 @@ function renderBubble(mouseX, mouseY, word) {
 			var allDocument = notWorking(response.result);
 			var realWord = allDocument.find('.headword>h1')[0].lastChild.textContent;
 			var wordState = allDocument.find('.main-fl');
-			upload_word(realWord);
 			//get word state list to judge weather there is noun
 			var wordStateListEm = allDocument.find(".main-fl em"); //list of em elements
 			var wordStateList = [];

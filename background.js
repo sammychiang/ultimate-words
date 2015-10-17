@@ -1,6 +1,11 @@
 google.load('search', '1');
 var imageSearch;
-
+var notWorking = function(html) {
+	var el = document.createElement('div');
+	el.className = "merriam";
+	el.innerHTML = html;
+	return $(el);
+};
 
 
 chrome.extension.onMessage.addListener(
@@ -44,10 +49,7 @@ chrome.extension.onMessage.addListener(
 		}
 
 		if (request.type == "images") {
-			console.log("images", google.setOnLoadCallback);
-			console.log("load done");
 			google.setOnLoadCallback(OnLoad());
-			console.log("set done");
 			return true;
 		} else {
 			var getUrl = (request.type == "merriam" ?
@@ -56,6 +58,12 @@ chrome.extension.onMessage.addListener(
 			jQuery.ajax({
 				url: getUrl,
 				success: function(data) {
+					if (request.type == "merriam") {
+						var allDocument = notWorking(data);
+						var realWord = allDocument.find('.headword>h1')[0].lastChild.textContent;
+						console.log(allDocument, realWord);
+						upload_word(realWord);
+					}
 					sendResponse({
 						"result": data
 					});

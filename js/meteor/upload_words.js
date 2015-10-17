@@ -12,6 +12,6 @@ function upload_word(word) {
   var array = [];
   array.push(word);
   ddp.call("upload_word", array, function(error, result) {
-    console.log(error, esult);
+    console.log(error, result);
   })
 }

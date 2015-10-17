@@ -90,7 +90,7 @@ MeteorDdp.prototype._resolveCall = function(data) {
   if (data.error) {
     this.defs[data.id].reject(data.error.reason);
   } else if (typeof data.result !== 'undefined') {
-    console.log(data, this.defs[data.id]);
+    console.log(data);
     this.defs[data.id].resolve(data.result);
   }
 };
